@@ -9,14 +9,14 @@ export interface Analyzer {
 class Spider {
     private filePath = path.resolve(__dirname, '../data/house.json')
 
-    async getRawHtml() {
+    private async getRawHtml() {
         let result = await superagent.get(url)
         return result.text
     }
-    writeFile(content: string) {
+    private writeFile(content: string) {
         fs.writeFileSync(this.filePath, content)
     }
-    async initSpiderProcess() {
+    private async initSpiderProcess() {
         const html = await this.getRawHtml()
         const fileContent = this.analyze.analyze(html, this.filePath)
         this.writeFile(fileContent)
@@ -26,5 +26,5 @@ class Spider {
     }
 }
 const url = 'https://hz.ke.com/ershoufang/'
-const analyze = new keAnalyzer()
+const analyze = keAnalyzer.getInstance()
 const spider = new Spider(url, analyze)

@@ -22,7 +22,14 @@ export interface Content {
 }
 
 export default class KeAnalyzer implements Analyzer {
-    constructor() {
+    private static instance: KeAnalyzer
+    private constructor() {
+    }
+    static getInstance() {
+        if (!KeAnalyzer.instance) {
+            KeAnalyzer.instance = new KeAnalyzer()
+        }
+        return KeAnalyzer.instance
     }
     getJSONInfos(houseInfo: HouseResult, filePath: string): Content {
         let fileContent: Content = {}
@@ -64,4 +71,5 @@ export default class KeAnalyzer implements Analyzer {
         const fileContent = this.getJSONInfos(houses, filePath)
         return JSON.stringify(fileContent)
     }
+
 }
