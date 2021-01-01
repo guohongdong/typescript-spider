@@ -1,6 +1,6 @@
 import cheerio from 'cheerio'
 import fs from 'fs'
-import { Analyzer } from './index'
+import { Analyzer } from './spider'
 
 export interface HouseInfo {
     title: string,
