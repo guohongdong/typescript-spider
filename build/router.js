@@ -8,9 +8,18 @@ var spider_1 = __importDefault(require("./spider"));
 var keAnalyzer_1 = __importDefault(require("./keAnalyzer"));
 var router = express_1.Router();
 router.get('/', function (request, response) {
-    var url = 'https://hz.ke.com/ershoufang/';
-    var analyze = keAnalyzer_1.default.getInstance();
-    new spider_1.default(url, analyze);
-    response.send('获取数据成功');
+    response.send("   \n        <html>\n        <body>\n            <form method=\"POST\" action=\"/getData\">\n            <input type=\"password\" name=\"password\">\n            <button type=\"submit\">\u63D0\u4EA4</button>\n            </form>\n        </body>\n        </html>\n    ");
+});
+router.post('/getData', function (request, response) {
+    var password = request.body.password;
+    if (password === '111') {
+        var url = 'https://hz.ke.com/ershoufang/';
+        var analyze = keAnalyzer_1.default.getInstance();
+        new spider_1.default(url, analyze);
+        response.send('获取数据成功');
+    }
+    else {
+        response.send('获取数据失败');
+    }
 });
 exports.default = router;
