@@ -46,7 +46,7 @@ var Spider = /** @class */ (function () {
     function Spider(url, analyze) {
         this.url = url;
         this.analyze = analyze;
-        this.filePath = path_1.default.resolve(__dirname, '../data/house.json');
+        this.filePath = path_1.default.resolve(__dirname, '../../data/house.json');
         this.initSpiderProcess();
     }
     Spider.prototype.getRawHtml = function () {

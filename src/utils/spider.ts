@@ -9,7 +9,7 @@ class Spider {
     constructor(private url: string, private analyze: Analyzer) {
         this.initSpiderProcess()
     }
-    private filePath = path.resolve(__dirname, '../data/house.json')
+    private filePath = path.resolve(__dirname, '../../data/house.json')
 
     private async getRawHtml() {
         let result = await superagent.get(this.url)

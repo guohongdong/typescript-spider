@@ -1,11 +1,27 @@
-import { Router, Request, Response } from 'express'
+import { Router, Request, Response, NextFunction } from 'express'
 import fs from 'fs'
 import path from 'path'
 import Spider from './utils/spider'
-import keAnalyzer, { Content, HouseInfo } from './utils/analyzer'
+import Analyzer, { Content } from './utils/analyzer'
+import { getResponseData } from './utils/util'
 interface RequestWithBody extends Request {
     body: {
         [key: string]: string
+    }
+}
+/**
+ * 检查登录状态的中间件
+ *
+ * @param {Request} req
+ * @param {Response} res
+ * @param {NextFunction} next
+ */
+const checkLogin = (req: Request, res: Response, next: NextFunction) => {
+    const isLogin = req.session ? req.session.login : false
+    if (isLogin) {
+        next()
+    } else {
+        res.json(getResponseData(null, '请先登录'))
     }
 }
 
@@ -51,13 +67,13 @@ router.post('/login', (request: RequestWithBody, response: Response) => {
     let { password } = request.body
     const isLogin = request.session ? request.session.login : undefined
     if (isLogin) {
-        response.send('已经成功')
+        response.json(getResponseData(false, '已经成功'))
     } else {
         if (password === '1234' && request.session) {
             request.session.login = true
-            response.redirect('/')
+            response.json(getResponseData(true))
         } else {
-            response.send('登录失败')
+            response.json(getResponseData(false, '登录失败'))
         }
     }
 })
@@ -66,37 +82,26 @@ router.get('/logout', (request: Request, response: Response) => {
     if (request.session) {
         request.session.login = undefined
     }
-    response.redirect('/')
+    response.json(getResponseData(true))
 })
 
-router.get('/getData', (request: RequestWithBody, response: Response) => {
-    const isLogin = request.session ? request.session.login : undefined
-    if (isLogin) {
-        const url = 'https://hz.ke.com/ershoufang/'
-        const analyze = keAnalyzer.getInstance()
-        new Spider(url, analyze)
-        response.send('获取数据成功')
-    } else {
-        response.send('请先登录')
-    }
+router.get('/getData', checkLogin, (request: RequestWithBody, response: Response) => {
+    const url = 'https://hz.ke.com/ershoufang/'
+    const analyze = Analyzer.getInstance()
+    new Spider(url, analyze)
+    response.json(getResponseData(true))
 })
 
-router.get('/showData', (request: RequestWithBody, response: Response) => {
-    const isLogin = request.session ? request.session.login : undefined
-    if (isLogin) {
-        try {
-            const filePath = path.resolve(__dirname, '../data/house.json')
-            let fileContent: Content = {}
-            if (fs.existsSync(filePath)) {
-                fileContent = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
-            }
-            response.json(fileContent)
-        } catch (error) {
-            response.send('尚未获取过数据')
-
+router.get('/showData', checkLogin, (request: RequestWithBody, response: Response) => {
+    try {
+        const filePath = path.resolve(__dirname, '../data/house.json')
+        let fileContent: Content = {}
+        if (fs.existsSync(filePath)) {
+            fileContent = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
         }
-    } else {
-        response.send('请先登录')
+        response.json(getResponseData(fileContent))
+    } catch (error) {
+        response.json(getResponseData(false, '尚未获取过数据'))
     }
 })
 
