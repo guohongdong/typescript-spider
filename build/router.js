@@ -26,14 +26,7 @@ var checkLogin = function (req, res, next) {
     }
 };
 var router = express_1.Router();
-router.get('/', function (request, response) {
-    var isLogin = request.session ? request.session.login : undefined;
-    if (isLogin) {
-        response.send("\n        <!DOCTYPE html>\n        <html lang=\"zh\">\n        <head>\n            <meta charset=\"UTF-8\">\n            <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n            <title>\u9000\u51FA</title>\n        </head>\n        <body>\n            <a href=\"/getData\">\u83B7\u53D6\u6570\u636E</a>\n            <a href=\"/showData\">\u5C55\u793A\u6570\u636E</a>\n            <a href=\"/logout\">\u9000\u51FA</a>\n        </body>\n        </html>");
-    }
-    else {
-        response.send("   \n        <!DOCTYPE html>\n        <html lang=\"zh\">\n        <head>\n            <meta charset=\"UTF-8\">\n            <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n            <title>\u767B\u5F55</title>\n        </head>\n        <body>\n            <form method=\"POST\" action=\"/login\">\n                <input type=\"password\" name=\"password\" autocomplete>\n                <button type=\"submit\">\u767B\u5F55</button>\n            </form>\n        </body>\n        </html>\n    ");
-    }
+router.get('/', function () {
 });
 router.post('/login', function (request, response) {
     var password = request.body.password;
