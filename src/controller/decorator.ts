@@ -1,18 +1,32 @@
 import { Router } from 'express'
 export const router = Router()
 
+enum Method {
+    get = "get",
+    post = "post"
+}
+
 export function controller(target: any) {
     for (let key in target.prototype) {
         const path = Reflect.getMetadata('path', target.prototype, key)
+        const method: Method = Reflect.getMetadata('method', target.prototype, key)
         const handle = target.prototype[key]
-        if (path) {
+        if (path && method && handle) {
+            router[method](path, handle)
             router.get(path, handle)
         }
     }
 }
-
-export function get(path: string) {
-    return function (target: any, key: string) {
-        Reflect.defineMetadata('path', path, target, key)
+function getRequestDecorator(type: string) {
+    return function (path: string) {
+        return function (target: any, key: string) {
+            Reflect.defineMetadata('path', path, target, key)
+            Reflect.defineMetadata('method', type, target, key)
+        }
     }
+
 }
+export const get = getRequestDecorator('get')
+export const post = getRequestDecorator('post')
+export const put = getRequestDecorator('put')
+export const del = getRequestDecorator('delete')

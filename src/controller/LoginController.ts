@@ -1,9 +1,26 @@
 import 'reflect-metadata'
 import { Request, Response } from 'express'
-import { get, controller } from './decorator'
+import { get, controller, post } from './decorator'
 import { getResponseData } from '../utils/util'
 @controller
 class LoginController {
+    @post('/login')
+    login(request: Request, response: Response) {
+        let { password } = request.body
+        const isLogin = request.session ? request.session.login : undefined
+        if (isLogin) {
+            response.json(getResponseData(false, '已经成功'))
+        } else {
+            if (password === '1234' && request.session) {
+                request.session.login = true
+                response.json(getResponseData(true))
+            } else {
+                response.json(getResponseData(false, '登录失败'))
+            }
+        }
+    }
+
+
     @get('/logout')
     logout(request: Request, response: Response) {
         if (request.session) {
