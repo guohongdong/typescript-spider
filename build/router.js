@@ -26,8 +26,6 @@ var checkLogin = function (req, res, next) {
     }
 };
 var router = express_1.Router();
-router.get('/', function () {
-});
 router.post('/login', function (request, response) {
     var password = request.body.password;
     var isLogin = request.session ? request.session.login : undefined;
@@ -43,12 +41,6 @@ router.post('/login', function (request, response) {
             response.json(util_1.getResponseData(false, '登录失败'));
         }
     }
-});
-router.get('/logout', function (request, response) {
-    if (request.session) {
-        request.session.login = undefined;
-    }
-    response.json(util_1.getResponseData(true));
 });
 router.get('/getData', checkLogin, function (request, response) {
     var url = 'https://hz.ke.com/ershoufang/';

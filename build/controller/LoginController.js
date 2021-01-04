@@ -11,9 +11,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
 var decorator_1 = require("./decorator");
+var util_1 = require("../utils/util");
 var LoginController = /** @class */ (function () {
     function LoginController() {
     }
+    LoginController.prototype.logout = function (request, response) {
+        if (request.session) {
+            request.session.login = undefined;
+        }
+        response.json(util_1.getResponseData(true));
+    };
     LoginController.prototype.home = function (request, response) {
         var isLogin = request.session ? request.session.login : undefined;
         if (isLogin) {
@@ -23,6 +30,12 @@ var LoginController = /** @class */ (function () {
             response.send("   \n            <!DOCTYPE html>\n            <html lang=\"zh\">\n            <head>\n                <meta charset=\"UTF-8\">\n                <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n                <title>\u767B\u5F55</title>\n            </head>\n            <body>\n                <form method=\"POST\" action=\"/login\">\n                    <input type=\"password\" name=\"password\" autocomplete>\n                    <button type=\"submit\">\u767B\u5F55</button>\n                </form>\n            </body>\n            </html>\n        ");
         }
     };
+    __decorate([
+        decorator_1.get('/logout'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object, Object]),
+        __metadata("design:returntype", void 0)
+    ], LoginController.prototype, "logout", null);
     __decorate([
         decorator_1.get('/'),
         __metadata("design:type", Function),

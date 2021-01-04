@@ -1,11 +1,19 @@
+import 'reflect-metadata'
 import { Request, Response } from 'express'
-import  'reflect-metadata'
 import { get, controller } from './decorator'
-
+import { getResponseData } from '../utils/util'
 @controller
 class LoginController {
+    @get('/logout')
+    logout(request: Request, response: Response) {
+        if (request.session) {
+            request.session.login = undefined
+        }
+        response.json(getResponseData(true))
+    }
+
     @get('/')
-    home(request: Request, response: Response){
+    home(request: Request, response: Response) {
         const isLogin = request.session ? request.session.login : undefined
         if (isLogin) {
             response.send(`
@@ -39,6 +47,6 @@ class LoginController {
             </body>
             </html>
         `)
-        } 
+        }
     }
 }

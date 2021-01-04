@@ -26,9 +26,6 @@ const checkLogin = (req: Request, res: Response, next: NextFunction) => {
 }
 
 const router = Router()
-router.get('/', () => {
-   
-})
 
 router.post('/login', (request: RequestWithBody, response: Response) => {
     let { password } = request.body
@@ -43,13 +40,6 @@ router.post('/login', (request: RequestWithBody, response: Response) => {
             response.json(getResponseData(false, '登录失败'))
         }
     }
-})
-
-router.get('/logout', (request: Request, response: Response) => {
-    if (request.session) {
-        request.session.login = undefined
-    }
-    response.json(getResponseData(true))
 })
 
 router.get('/getData', checkLogin, (request: RequestWithBody, response: Response) => {
