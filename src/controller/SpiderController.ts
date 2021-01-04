@@ -2,7 +2,7 @@ import 'reflect-metadata'
 import fs from 'fs'
 import path from 'path'
 import { Request, Response, NextFunction } from 'express'
-import { get, controller, use } from './decorator'
+import { get, controller, use } from '../decorator'
 import { getResponseData } from '../utils/util'
 import Analyzer, { Content } from '../utils/analyzer'
 import Spider from '../utils/spider'
@@ -23,8 +23,8 @@ const checkLogin = (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
-@controller
-class SpiderController {
+@controller('/')
+export class SpiderController {
     @get('/getData')
     @use(checkLogin)
     getData(request: Request, response: Response) {
