@@ -18,7 +18,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     next()
 })
 
-app.listen(3000, () => {
+app.listen(7000, () => {
     console.log('服务已启动')
 })
 

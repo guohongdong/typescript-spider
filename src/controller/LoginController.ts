@@ -4,9 +4,15 @@ import { get, controller, post } from '../decorator'
 import { getResponseData } from '../utils/util'
 @controller('/')
 export class LoginController {
-    static isLogin = (request: Request)=>{
+    static isLogin = (request: Request) => {
         return !!(request.session ? request.session.login : undefined)
     }
+    @get('/api/isLogin')
+    isLogin(request: Request, response: Response): void {
+        const isLogin = LoginController.isLogin(request)
+        response.json(getResponseData(isLogin))
+    }
+
     @post('/login')
     login(request: Request, response: Response): void {
         let { password } = request.body
