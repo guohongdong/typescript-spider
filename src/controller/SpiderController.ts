@@ -23,10 +23,23 @@ const checkLogin = (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
+/**
+ * 打印日志中间件
+ *
+ * @param {Request} req
+ * @param {Response} res
+ * @param {NextFunction} next
+ */
+const createLogger = (req: Request, res: Response, next: NextFunction) => {
+   console.log(req.params,res.status,'createLogger')
+   next()
+}
+
 @controller('/')
 export class SpiderController {
     @get('/getData')
     @use(checkLogin)
+    @use(createLogger)
     getData(request: Request, response: Response) {
         const url = 'https://hz.ke.com/ershoufang/'
         const analyze = Analyzer.getInstance()
@@ -36,6 +49,7 @@ export class SpiderController {
 
     @get('/showData')
     @use(checkLogin)
+    @use(createLogger)
     showData(request: Request, response: Response) {
         try {
             const filePath = path.resolve(__dirname, '../../data/house.json')
@@ -46,3 +60,4 @@ export class SpiderController {
         }
     }
 }
+

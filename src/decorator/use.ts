@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import { RequestHandler } from 'express'
 import { LoginController, SpiderController } from '../controller'
 
@@ -10,6 +11,8 @@ import { LoginController, SpiderController } from '../controller'
  */
 export function use(middleware: RequestHandler) {
     return function (target: LoginController | SpiderController, key: string) {
-        Reflect.defineMetadata('middleware', middleware, target, key)
+        let middlewares: RequestHandler[] =  Reflect.getMetadata('middlewares', target, key) || []
+        middlewares.push(middleware)
+        Reflect.defineMetadata('middlewares', middlewares, target, key)
     }
 }
